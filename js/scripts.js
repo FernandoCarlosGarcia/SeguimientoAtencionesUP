@@ -854,7 +854,7 @@ function cerrarLoader() {
 function crearTabla(datos) {
 
 	const mapeoTitulos = {
-    	ben_nombre: "Familiar",
+    	ben_nombre: "Afiliado",
     	estado: "Estado de Cobertura",
     	fechanac: "Fecha de Nacimiento",
     	ben_nrodoc: "Número de Documento"
