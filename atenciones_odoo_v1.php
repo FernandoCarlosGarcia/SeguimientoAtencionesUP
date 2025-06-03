@@ -27,7 +27,7 @@
 			</div>
 			<div class="col-1">
 			<label for="email" >Email</label>
-			<input type="email" name="email" id="email"  value="<?php echo $email; ?>" required />
+			<input type="email" name="email" id="email"  value="<?php echo $email or ''; ?>" required />
 		</div>
 		<div class="col-2">
 			<button id="btn_enviar_autorizacion" onclick="enviarAtencion();" >Enviar</button> 
