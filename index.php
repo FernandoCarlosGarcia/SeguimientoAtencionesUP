@@ -95,14 +95,12 @@ $auth = (isset($_REQUEST["auth"])) ? $_REQUEST["auth"] : "";
 					<div class="pure-u-1">
 						<form id="frm_atenciones" name="frm_atenciones" method="post" enctype="multipart/form-data"
 							action="">
+							<div id="div_grupo_familiar" class="col-1 grupo_familiar"></div>
 							<div class="clearfix"></div>
 							<div class="col-1" style="display: none" id="div_nombre_afiliado">
 								<label for="nombre_afiliado">Apellido y nombre</label>
 								<input type="text" name="nombre_afiliado" id="nombre_afiliado" value="" readonly />
 							</div>
-							<div class="clearfix"></div>
-							<div id="div_grupo_familiar" class="col-1 grupo_familiar"></div>
-
 							<div class="clearfix"></div>
 							<div class="col-1">
 								<label for="dni">DNI *</label>
