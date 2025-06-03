@@ -1,5 +1,5 @@
 <?php
-/* Template Name: Consulta Atenciones*/
+/* Template Name: Consulta Atenciones */
 $res = (isset($_REQUEST["res"])) ? $_REQUEST["res"] : "";
 $msj = "";
 $dni = (isset($_REQUEST["dni"])) ? $_REQUEST["dni"] : "";

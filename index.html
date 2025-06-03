@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atenciones UP - Visitar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --error-color: #dc2626;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .header {
+            background: var(--surface);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .mobile-menu {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu span {
+            width: 25px;
+            height: 3px;
+            background: var(--text-primary);
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: var(--surface);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            transition: border-color 0.3s, background-color 0.3s;
+            cursor: pointer;
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary-color);
+            background: rgb(37 99 235 / 0.05);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--primary-color);
+            background: rgb(37 99 235 / 0.1);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .file-list {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--background);
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--background);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .attention-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .attention-item {
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .attention-item:hover {
+            border-color: var(--primary-color);
+        }
+
+        .attention-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-open {
+            background: rgb(59 130 246 / 0.1);
+            color: var(--primary-color);
+        }
+
+        .status-closed {
+            background: rgb(5 150 105 / 0.1);
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background: rgb(217 119 6 / 0.1);
+            color: var(--warning-color);
+        }
+
+        .faq-section {
+            grid-column: 1 / -1;
+        }
+
+        .faq-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 1rem;
+            background: var(--background);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+
+        .faq-question:hover {
+            background: rgb(37 99 235 / 0.05);
+        }
+
+        .faq-answer {
+            padding: 1rem;
+            background: var(--surface);
+            display: none;
+        }
+
+        .faq-answer.active {
+            display: block;
+        }
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgb(0 0 0 / 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--border);
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert-success {
+            background: rgb(5 150 105 / 0.1);
+            color: var(--success-color);
+            border: 1px solid rgb(5 150 105 / 0.2);
+        }
+
+        .alert-error {
+            background: rgb(220 38 38 / 0.1);
+            color: var(--error-color);
+            border: 1px solid rgb(220 38 38 / 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu {
+                display: flex;
+            }
+
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--surface);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: var(--shadow);
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin: 1rem auto;
+                padding: 0 1rem;
+            }
+
+            .nav-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="nav-container">
+            <div class="logo">🏥 Atenciones UP</div>
+            <div class="mobile-menu" id="mobileMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <!--
+            <nav class="nav-menu" id="navMenu">
+                <li><a href="#consultas">Consultas</a></li>
+                <li><a href="#autorizaciones">Autorizaciones</a></li>
+                <li><a href="#recetas">Recetas</a></li>
+                <li><a href="#ayuda">Ayuda</a></li>
+            </nav>
+            -->
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Formulario de Consulta -->
+        <div class="card">
+            <h2 class="card-title">
+                📋 Nueva Consulta
+            </h2>
+            
+            <div class="alert alert-success" id="successAlert"></div>
+            <div class="alert alert-error" id="errorAlert"></div>
+
+            <form id="consultaForm">
+                <div class="form-group">
+                    <label class="form-label" for="dni">DNI del Beneficiario</label>
+                    <input type="text" id="dni" class="form-input" placeholder="Ingrese su DNI" maxlength="8">
+                </div>
+
+                <div class="form-group" id="nombreGroup" style="display: none;">
+                    <label class="form-label" for="nombreAfiliado">Nombre del Afiliado</label>
+                    <input type="text" id="nombreAfiliado" class="form-input" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="sector">Tipo de Consulta</label>
+                    <select id="sector" class="form-select">
+                        <option value="">Seleccione una opción</option>
+                        <option value="consultas">Consultas Generales</option>
+                        <option value="autorizaciones">Autorizaciones</option>
+                        <option value="receta_electronica">Receta Electrónica</option>
+                        <option value="reintegros">Reintegros</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" class="form-input" placeholder="correo@ejemplo.com">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="comentario">Descripción de la Consulta</label>
+                    <textarea id="comentario" class="form-textarea" placeholder="Describa su consulta detalladamente..."></textarea>
+                </div>
+
+                <!-- Área de Upload -->
+                <div class="form-group">
+                    <label class="form-label">Adjuntar Documentos</label>
+                    <div class="file-upload-area" id="uploadArea">
+                        <div class="upload-icon">📎</div>
+                        <p>Arrastra los archivos aquí o haz clic para seleccionar</p>
+                        <small>Formatos: JPG, PNG, PDF, DOC, XLS (Máx. 14MB por archivo)</small>
+                        <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" style="display: none;">
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    📤 Enviar Consulta
+                </button>
+            </form>
+        </div>
+
+        <!-- Historial de Atenciones -->
+        <div class="card">
+            <h2 class="card-title">
+                📊 Historial de Atenciones
+            </h2>
+            
+            <div class="form-group">
+                <label class="form-label" for="numeroGestion">Número de Gestión</label>
+                <select id="numeroGestion" class="form-select">
+                    <option value="">Seleccione una gestión</option>
+                </select>
+            </div>
+
+            <button type="button" class="btn btn-secondary" id="consultarBtn">
+                🔍 Consultar
+            </button>
+
+            <div class="attention-list" id="atencionList">
+                <!-- Las atenciones se cargarán aquí dinámicamente -->
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <!--
+        <div class="card faq-section">
+            <h2 class="card-title">
+                ❓ Preguntas Frecuentes
+            </h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    ¿Cómo subo documentos para una autorización?
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    Para subir documentos, selecciona el tipo de consulta "Autorizaciones", luego arrastra los archivos al área de carga o haz clic para seleccionarlos. Los formatos permitidos son JPG, PNG, PDF, DOC y XLS.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    ¿Cuánto tiempo demora una respuesta?
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    El tiempo de respuesta varía según el tipo de consulta. Las consultas generales suelen responderse en 24-48 horas, mientras que las autorizaciones pueden demorar hasta 72 horas.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    ¿Puedo seguir el estado de mi consulta?
+                    <span>+</span>
+                </div>
+                <div class="faq-answer">
+                    Sí, puedes consultar el estado de tu gestión ingresando tu DNI y seleccionando el número de gestión en la sección "Historial de Atenciones".
+                </div>
+            </div>
+        </div>
+        -->
+    </main>
+
+    <script>
+        // Variables globales
+        let sessionId = '';
+        let uploadedFiles = [];
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+
+        function initializeApp() {
+            setupEventListeners();
+            setupFileUpload();
+        }
+
+        function setupEventListeners() {
+            // Mobile menu
+            document.getElementById('mobileMenu').addEventListener('click', toggleMobileMenu);
+            
+            // Form events
+            document.getElementById('dni').addEventListener('blur', handleDNIChange);
+            document.getElementById('consultaForm').addEventListener('submit', handleFormSubmit);
+            document.getElementById('consultarBtn').addEventListener('click', consultarAtenciones);
+        }
+
+        function setupFileUpload() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+            uploadArea.addEventListener('dragover', handleDragOver);
+            uploadArea.addEventListener('drop', handleFileDrop);
+            fileInput.addEventListener('change', handleFileSelect);
+        }
+
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        async function handleDNIChange(e) {
+            const dni = e.target.value;
+            if (dni.length === 8) {
+                showLoader();
+                try {
+                    await authenticateUser(dni);
+                    await loadUserConsultations();
+                } catch (error) {
+                    showAlert('Error al verificar el DNI', 'error');
+                } finally {
+                    hideLoader();
+                }
+            }
+        }
+
+        async function authenticateUser(dni) {
+            // Simulación de autenticación
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    sessionId = 'session_' + Date.now();
+                    document.getElementById('nombreAfiliado').value = 'Juan Pérez';
+                    document.getElementById('nombreGroup').style.display = 'block';
+                    resolve();
+                }, 1000);
+            });
+        }
+
+        async function loadUserConsultations() {
+            // Simulación de carga de consultas
+            const select = document.getElementById('numeroGestion');
+            select.innerHTML = '<option value="">Seleccione una gestión</option>';
+            
+            // Datos simulados
+            const consultations = [
+                { id: '001', number: '2024-001-123' },
+                { id: '002', number: '2024-002-456' },
+                { id: '003', number: '2024-003-789' }
+            ];
+
+            consultations.forEach(consultation => {
+                const option = new Option(consultation.number, consultation.id);
+                select.add(option);
+            });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleFileDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            processFiles(files);
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            processFiles(files);
+        }
+
+        function processFiles(files) {
+            files.forEach(file => {
+                if (validateFile(file)) {
+                    uploadFile(file);
+                }
+            });
+        }
+
+        function validateFile(file) {
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            const maxSize = 14 * 1024 * 1024; // 14MB
+
+            if (!allowedTypes.includes(file.type)) {
+                showAlert('Tipo de archivo no permitido: ' + file.name, 'error');
+                return false;
+            }
+
+            if (file.size > maxSize) {
+                showAlert('Archivo muy grande: ' + file.name + ' (máx. 14MB)', 'error');
+                return false;
+            }
+
+            if (uploadedFiles.length >= 5) {
+                showAlert('Máximo 5 archivos permitidos', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        function uploadFile(file) {
+            const fileId = 'file_' + Date.now();
+            const fileItem = createFileItem(file, fileId);
+            document.getElementById('fileList').appendChild(fileItem);
+
+            // Simulación de upload con progress
+            simulateUpload(fileId, file);
+        }
+
+        function createFileItem(file, fileId) {
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.id = fileId;
+            div.innerHTML = `
+                <div>
+                    <strong>${file.name}</strong>
+                    <small>(${(file.size / 1024 / 1024).toFixed(2)} MB)</small>
+                </div>
+                <button type="button" class="btn btn-danger" onclick="removeFile('${fileId}')">❌</button>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            `;
+            return div;
+        }
+
+        function simulateUpload(fileId, file) {
+            const progressFill = document.querySelector(`#${fileId} .progress-fill`);
+            let progress = 0;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    uploadedFiles.push({ id: fileId, file: file });
+                }
+                progressFill.style.width = progress + '%';
+            }, 200);
+        }
+
+        function removeFile(fileId) {
+            document.getElementById(fileId).remove();
+            uploadedFiles = uploadedFiles.filter(f => f.id !== fileId);
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (!validateForm()) return;
+
+            showLoader();
+            try {
+                await submitConsultation();
+                showAlert('Consulta enviada exitosamente', 'success');
+                resetForm();
+            } catch (error) {
+                showAlert('Error al enviar la consulta', 'error');
+            } finally {
+                hideLoader();
+            }
+        }
+
+        function validateForm() {
+            const dni = document.getElementById('dni').value;
+            const sector = document.getElementById('sector').value;
+            const comentario = document.getElementById('comentario').value;
+
+            if (!dni || dni.length !== 8) {
+                showAlert('DNI inválido', 'error');
+                return false;
+            }
+
+            if (!sector) {
+                showAlert('Seleccione el tipo de consulta', 'error');
+                return false;
+            }
+
+            if (!comentario.trim()) {
+                showAlert('Describa su consulta', 'error');
+                return false;
+            }
+
+            return true;
+        }
+
+        async function submitConsultation() {
+            // Simulación de envío
+            return new Promise((resolve) => {
+                setTimeout(resolve, 2000);
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('consultaForm').reset();
+            document.getElementById('fileList').innerHTML = '';
+            document.getElementById('nombreGroup').style.display = 'none';
+            uploadedFiles = [];
+        }
+
+        async function consultarAtenciones() {
+            const numeroGestion = document.getElementById('numeroGestion').value;
+            if (!numeroGestion) {
+                showAlert('Seleccione un número de gestión', 'error');
+                return;
+            }
+
+            showLoader();
+            try {
+                const atenciones = await loadAtenciones(numeroGestion);
+                displayAtenciones(atenciones);
+            } catch (error) {
+                showAlert('Error al cargar las atenciones', 'error');
+            } finally {
+                hideLoader();
+            }
+        }
+
+        async function loadAtenciones(numeroGestion) {
+            // Datos simulados
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve([
+                        {
+                            id: 1,
+                            fecha: '2024-01-15',
+                            estado: 'Abierto',
+                            comentario: 'Solicitud de autorización para estudios médicos',
+                            respuesta: 'Su solicitud está siendo procesada'
+                        },
+                        {
+                            id: 2,
+                            fecha: '2024-01-10',
+                            estado: 'Cerrado',
+                            comentario: 'Consulta sobre cobertura',
+                            respuesta: 'La cobertura solicitada está incluida en su plan'
+                        }
+                    ]);
+                }, 1000);
+            });
+        }
+
+        function displayAtenciones(atenciones) {
+            const container = document.getElementById('atencionList');
+            container.innerHTML = '';
+
+            atenciones.forEach(atencion => {
+                const div = document.createElement('div');
+                div.className = 'attention-item';
+                div.innerHTML = `
+                    <div class="attention-header">
+                        <strong>Fecha: ${atencion.fecha}</strong>
+                        <span class="status-badge ${getStatusClass(atencion.estado)}">${atencion.estado}</span>
+                    </div>
+                    <p><strong>Consulta:</strong> ${atencion.comentario}</p>
+                    <p><strong>Respuesta:</strong> ${atencion.respuesta}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function getStatusClass(estado) {
+            switch (estado.toLowerCase()) {
+                case 'abierto': return 'status-open';
+                case 'cerrado': return 'status-closed';
+                case 'pendiente': return 'status-pending';
+                default: return 'status-open';
+            }
+        }
+
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const icon = element.querySelector('span');
+            
+            answer.classList.toggle('active');
+            icon.textContent = answer.classList.contains('active') ? '-' : '+';
+        }
+
+        function showAlert(message, type) {
+            const alertElement = document.getElementById(type === 'error' ? 'errorAlert' : 'successAlert');
+            alertElement.textContent = message;
+            alertElement.style.display = 'block';
+            
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 5000);
+        }
+
+        function showLoader() {
+            document.getElementById('loader').style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
