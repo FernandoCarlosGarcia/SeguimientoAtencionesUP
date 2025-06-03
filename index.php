@@ -1,8 +1,9 @@
 <?php
 /* Template Name: Consulta Atenciones */
-$res = (isset($_REQUEST["res"])) ? $_REQUEST["res"] : "";
+$res = isset($_REQUEST["res"]) ? $_REQUEST["res"] : "";
 $msj = "";
 $dni = (isset($_REQUEST["dni"])) ? $_REQUEST["dni"] : "";
+$email = (isset($_REQUEST["email"])) ? $_REQUEST["email"] : "";
 $numero_gestion = (isset($_REQUEST["numero_gestion"])) ? $_REQUEST["numero_gestion"] : "";
 $nombre = (isset($_REQUEST["nombre"])) ? $_REQUEST["nombre"] : "";
 $token = (isset($_REQUEST["token"])) ? $_REQUEST["token"] : "";
@@ -70,6 +71,7 @@ $auth = (isset($_REQUEST["auth"])) ? $_REQUEST["auth"] : "";
 <?php } ?>
 
 
+	<?php if (isset($auth)) { ?>
 
 <main id="atencion-al-beneficiario" role="main">
 	<link rel="stylesheet" href="css/custom.css">
@@ -128,3 +130,4 @@ $auth = (isset($_REQUEST["auth"])) ? $_REQUEST["auth"] : "";
 		</section>
 	</div>
 </main>
+<?php } ?>
