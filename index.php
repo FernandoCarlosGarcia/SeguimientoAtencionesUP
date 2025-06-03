@@ -109,6 +109,7 @@ $auth = (isset($_REQUEST["auth"])) ? $_REQUEST["auth"] : "";
 								<input type="number" name="dni" id="dni" onchange="changeDni()"
 									value="<?php echo $dni; ?>" required />
 							</div>
+							<div class="clearfix"></div>
 							<div class="col-1">
 								<label for="numero_gestion">Número de Gestión *</label>
 								<!--										
