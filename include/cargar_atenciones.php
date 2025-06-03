@@ -31,7 +31,7 @@ function getAtenciones(){
 															  </div>';
 												}
 											}
-											if (!empty($atencion['link_ids'])) {
+											if (isset($array['links']) && !empty($atencion['link_ids'])) {
 												foreach ($atencion['links'] as $link) {
 													$html .= '<div class="align-right">
 																<a style="color: black;" href="'.$link['url'].'" target="_blank"><i class="fa fa-link" aria-hidden="true"></i> '.$link['name'].'</a>
