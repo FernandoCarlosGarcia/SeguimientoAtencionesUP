@@ -1,5 +1,5 @@
 <?php
-function getAtenciones(){
+function getAtenciones() {
 	$url = 'https://odoo.visitar.com.ar';
 	$atenciones = $_POST['atenciones'];
 	$numero_gestion = $_POST['numero_gestion'];
@@ -14,8 +14,8 @@ function getAtenciones(){
 						$t = strtotime($atencion['create_date']);
 						$titulo = ($atencion['origen'] == 'afiliado' ? 'Usted' : 'Visitar') . ' el día ' . date('d/m/Y H:i', $t - 10800);
 
-//https://img.icons8.com/plasticine/50/000000/gender-neutral-user-group.png
-//https://www.pikpng.com/pngl/m/265-2659520_this-icon-for-gender-neutral-user-is-an.png
+// https://img.icons8.com/plasticine/50/000000/gender-neutral-user-group.png
+// https://www.pikpng.com/pngl/m/265-2659520_this-icon-for-gender-neutral-user-is-an.png
 						$mensaje = nl2br($atencion['mensaje']);
 							$html .=	'<li class="clearfix">
 											<div class="message-data align-'.($atencion['origen'] == 'afiliado' ? 'left' : 'right').'">

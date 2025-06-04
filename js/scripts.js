@@ -20,24 +20,7 @@
 		$('.menu-item-has-children a').on('click', function () {
 			$(this).next('ul').toggle();
 		});
-/*
-		// Slick: Obras Sociales
-		var width = $(window).width();
 
-		if (width > 360) {
-			var slides = 5;
-		} else {
-			var slides = 3;
-		}
-
-		$('.slick-clientes').slick({
-			slidesToShow: slides,
-			arrows: true,
-			slidesToScroll: 1,
-			autoplay: true,
-			autoplaySpeed: 2000,
-		});
-*/
 		// Atencion al Beneficiario
 		jQuery('.wpcf7-form textarea').closest('p').wrap("<div class='column-2'></div>");
 		jQuery('.wpcf7-form .wpcf7-submit').closest('p').wrap("<div class='submit'></div>");
@@ -354,6 +337,228 @@
 
 })(jQuery, this);
 
+
+        let users = {} ;
+        let currentUser = null;
+
+        // Funciones para recordar sesión
+        function saveSession(username, rememberMe) {
+            if (rememberMe) {
+                // Guardar en localStorage para que persista entre sesiones del navegador
+                localStorage.setItem('rememberedUser', username);
+                localStorage.setItem('loginTime', Date.now().toString());
+                localStorage.setItem('sessionDuration', '30'); // días
+            } else {
+                // Guardar solo en sessionStorage (se elimina al cerrar el navegador)
+                sessionStorage.setItem('currentUser', username);
+                sessionStorage.setItem('loginTime', Date.now().toString());
+            }
+        }
+
+        function redirectAfterLogin(username) {
+            // Configurar redirecciones por usuario
+            const redirectUrls = {
+                'admin': '/SeguimientoAtencionesUP/index.php',
+                'usuario1': '/user/profile.php',
+                'gerente': '/manager/reports.php',
+                'default': '/dashboard.php'
+            } ;
+
+            // Obtener URL de redirección o usar default
+            const redirectUrl = redirectUrls[username] || redirectUrls['default'];
+
+            // Opcional: Mostrar mensaje antes de redirigir
+            showMessage(`Redirigiendo a ${redirectUrl} ...`, 'success');
+
+            // Redirigir después de un breve delay para mostrar el mensaje
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            } , 1500);
+        }
+
+        function redirectToExternalSite(username) {
+            // Para redirigir a sitios externos completos
+            const externalUrls = {
+                'admin': 'https://admin.miempresa.com',
+                'cliente': 'https://portal.miempresa.com',
+                'vendedor': 'https://crm.miempresa.com',
+                'default': 'https://www.miempresa.com/dashboard'
+            } ;
+
+            const redirectUrl = externalUrls[username] || externalUrls['default'];
+
+            showMessage(`Redirigiendo a ${redirectUrl} ...`, 'success');
+
+            setTimeout(() => {
+                window.location.replace(redirectUrl); // replace no permite volver atrás
+            } , 1500);
+        }
+
+        function checkSavedSession() {
+            // Verificar si hay una sesión recordada
+            const rememberedUser = localStorage.getItem('rememberedUser');
+            const loginTime = localStorage.getItem('loginTime');
+            const sessionDuration = parseInt(localStorage.getItem('sessionDuration') || '30');
+
+            if (rememberedUser && loginTime) {
+                const currentTime = Date.now();
+                const timeDiff = currentTime - parseInt(loginTime);
+                const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+
+                if (daysDiff < sessionDuration) {
+                    return rememberedUser;
+                } else {
+                    // Sesión expirada, limpiar datos
+                    clearSavedSession();
+                }
+            }
+
+            // Verificar sesión temporal
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (currentUser) {
+                return currentUser;
+            }
+
+            return null;
+        }
+
+        function clearSavedSession() {
+            localStorage.removeItem('rememberedUser');
+            localStorage.removeItem('loginTime');
+            localStorage.removeItem('sessionDuration');
+            sessionStorage.removeItem('currentUser');
+            sessionStorage.removeItem('loginTime');
+        }
+
+        function autoLogin() {
+            const savedUser = checkSavedSession();
+            if (savedUser) {
+                currentUser = savedUser;
+                saveSession(savedUser, true); // Renovar sesión
+
+                // Opción 1: Mostrar dashboard brevemente y luego redirigir
+                showDashboard();
+                showMessage(`Bienvenido de nuevo, ${savedUser} ! Redirigiendo...`, 'success');
+                //setTimeout(() => {
+                //    redirectAfterLogin(savedUser);
+                //} , 2000);
+
+                // Opción 2: Redirigir inmediatamente (descomenta para usar)
+                // redirectAfterLogin(savedUser);
+
+                return true;
+            }
+            return false;
+        }
+
+        function initializeSession() {
+            // Verificar si hay una sesión guardada al cargar la página
+            if (!autoLogin()) {
+                console.log('No hay sesión guardada');
+            }
+        }
+ 
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            if (!username || !password) {
+                showMessage('Por favor, completa todos los campos.', 'error');
+                return;
+            }
+            /*
+            if (Object.keys(users).length === 0) {
+                showMessage('Por favor, carga primero un archivo de usuarios.', 'error');
+                return;
+            }
+            */
+            let users = {
+                "admin": "admin",
+            } ;
+            if (users[username] && users[username] === password) {
+                currentUser = username;
+                saveSession(username, rememberMe);
+
+                // Opción 1: Mostrar dashboard y luego redirigir
+                showDashboard();
+
+                // showMessage(`¡Bienvenido ${username} ! Redirigiendo...`, 'success');
+                // setTimeout(() => {
+                //    redirectAfterLogin(username);
+                // } , 2000);
+
+                // Opción 2: Redirigir inmediatamente (descomenta para usar)
+                // redirectAfterLogin(username);
+
+                // Opción 3: Redirigir a sitio externo (descomenta para usar)
+                // redirectToExternalSite(username);
+            } else {
+                showMessage('Usuario o contraseña incorrectos.', 'error');
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('show');
+            document.getElementById('userWelcome').textContent = `Usuario: ${currentUser}`;
+        }
+
+        function logout() {
+            clearSavedSession();
+            currentUser = null;
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('dashboard').classList.remove('show');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('rememberMe').checked = false;
+            showMessage('Sesión cerrada correctamente.', 'success');
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = type;
+        }
+
+        // Permitir login con Enter
+        document.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && !document.getElementById('loginForm').classList.contains('hidden')) {
+                login();
+            }
+        } );
+
+        // Inicializar sesión al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            // Verificar si viene de un parámetro de URL para redirección
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectUrl = urlParams.get('redirect');
+
+            if (redirectUrl) {
+                // Guardar URL de redirección para después del login
+                sessionStorage.setItem('redirectAfterLogin', redirectUrl);
+            }
+
+            initializeSession();
+        } );
+
+        // Función alternativa para usar URL de redirección guardada
+        function redirectToSavedUrl(username) {
+            const savedRedirectUrl = sessionStorage.getItem('redirectAfterLogin');
+
+            if (savedRedirectUrl) {
+                sessionStorage.removeItem('redirectAfterLogin');
+                showMessage(`Redirigiendo a ${savedRedirectUrl} ...`, 'success');
+                setTimeout(() => {
+                    window.location.href = savedRedirectUrl;
+                } , 1500);
+            } else {
+                // Si no hay URL guardada, usar redirección por defecto
+                redirectAfterLogin(username);
+            }
+        }
+
+
 function validar() {
 	var v_dni = jQuery("#dni").val();
 	var v_sector = jQuery("#sector").val();
@@ -439,6 +644,7 @@ async function changeDni() {
 }
 
 async function changeNG() {
+	jQuery("#str_mensaje").html("");
 	consultarAtencion();	
 }
 
@@ -500,7 +706,6 @@ async function consultarAtencionToken() {
 		if (v_session_id != "") {
 			try {
 				var res = await odooGetAtenciones(v_session_id);
-				console.log(res);
 			} catch {
 				console.log('error');
 				var mensaje = "<span style='color:red;font-size: 1.5em;'>" + res + "</span>";
@@ -569,11 +774,24 @@ async function consultarAtencion() {
 	cerrarLoader();
 }
 
+function validarEmail(email) {
+    var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
+
+
+
 async function enviarAtencion() {
 
 	var v_alerta = "Faltan datos";
 	var v_session_id = jQuery("#session_id").val();
 	var v_comentario = jQuery("#comentario").val();
+	var v_email = jQuery("#email").val();
+	
+	if (!validarEmail(v_email)) {
+		return;
+    }
+
 
 	if (v_comentario == "") {
 		alert(v_alerta);
@@ -761,12 +979,14 @@ function odooMostrarAtencion(res, v_numero_gestion, estado) {
 			jQuery('#atenciones').show();
 			console.log(estado);
 			/* permite responder en cerrado, par la version v4 va a tener tambien una nueva propioedad de no permitir mensajes que reemplaza a esta*/
-			/*
+			
 			if (estado === 'Cerrado') {
 				jQuery('#agregar_atencion').hide();				
 				jQuery('#str_mensaje').html('<h2>ESTE CASO SE ENCUENTRA CONCLUIDO, SI TIENE NUEVAS CONSULTAS DEBE GENERAR UN NUEVO REQUERIMIENTO</h2>');
+			}else{
+				jQuery('#agregar_atencion').show();				
 			}
-			*/
+			
 
 		})
 		.fail(function () {
@@ -897,7 +1117,6 @@ document.addEventListener("DOMContentLoaded", function() {
     document.querySelectorAll("table tbody tr").forEach(row => {
         row.addEventListener("click", () => {
             let documento = row.querySelector("td:nth-child(4)").textContent; // Get the value from the 4th column
-			console.log(documento);
             let nuevaUrl = window.location.href + "?dni=" + encodeURIComponent(documento);
             window.location.href = nuevaUrl; // Redirect to the new URL
         });
