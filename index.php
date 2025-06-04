@@ -15,15 +15,9 @@ $auth = (isset($_REQUEST["auth"])) ? $_REQUEST["auth"] : "";
 	const ajaxurl_2 = window.location.origin + "subir.php";
 
 	jQuery(document).ready(function ($) {
-		var token = $('#token').val()
-		if (token != "") {
-			consultarAtencionToken();
-		} else {
-			var numero_gestion = $('#numero_gestion').val()
-			var ben_nrodoc = $('#ben_nrodoc').val()
-			if (numero_gestion != '' && ben_nrodoc != '') {
-				consultarAtencion();
-			}
+		var dni = $('#dni').val()
+		if (dni != "") {
+			changeDni();
 		}
 
 
@@ -54,6 +48,7 @@ $auth = (isset($_REQUEST["auth"])) ? $_REQUEST["auth"] : "";
 			});
 		})
 	<?php } ?>
+
 </script>
 
 
@@ -71,7 +66,7 @@ $auth = (isset($_REQUEST["auth"])) ? $_REQUEST["auth"] : "";
 <?php } ?>
 
 
-	<?php if (isset($auth)) { ?>
+	<?php if (isset($auth) && $auth == "") { ?>
 
 <main id="atencion-al-beneficiario" role="main">
 	<link rel="stylesheet" href="css/custom.css">
@@ -110,9 +105,12 @@ $auth = (isset($_REQUEST["auth"])) ? $_REQUEST["auth"] : "";
 							<div class="clearfix"></div>
 							<div class="col-0">
 								<label for="numero_gestion">Número de Gestión *</label>
-								<!--										
-								<input type="text" name="numero_gestion" id="numero_gestion" value="<?php echo $numero_gestion; ?>" required /> -->
-								<select id="numero_gestion" onchange="changeNG()">
+
+								<input type="text" id="busqueda" placeholder="Buscar..." onkeyup="filtrarOpciones()">
+
+
+
+								<select id="numero_gestion" onchange="changeNG()" >
 									<option value="">Seleccione una atención</option>
 								</select>
 

@@ -2,7 +2,7 @@
 //header('Access-Control-Allow-Origin: *');
 ini_set('max_execution_time', 300);		//300 seconds = 5 minutes
 include("include/api_autogestion.php");
-$url = 'https://test.odoo.visitar.com.ar';
+$url = 'https://odoo.visitar.com.ar';
 
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');

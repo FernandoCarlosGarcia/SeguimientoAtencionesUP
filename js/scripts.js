@@ -613,13 +613,10 @@ function odooGetAuth(v_dni) {
 				if (res.result.code == 200) {
 					jQuery("#session_id").val(res.result.session_id);
 					jQuery("#nombre_afiliado").val(res.result.ben_nombre);
-					console.log(res.result.grupo.gpf);
-					if (res.result.grupo.gpf) {
-					
+
+					if (res.result.grupo.gpf) {					
 						let tabla = crearTabla(res.result.grupo.gpf)
-
 						jQuery("#div_grupo_familiar").html(tabla);
-
 						jQuery("#div_grupo_familiar").show();
 					}
 					resolve(res.result.session_id);
@@ -630,7 +627,7 @@ function odooGetAuth(v_dni) {
 			}
 		});
 
-		xhr.open('POST', 'https://test.odoo.visitar.com.ar/autogestion/up/auth/v1/login');
+		xhr.open('POST', 'https://odoo.visitar.com.ar/autogestion/up/auth/v1/login');
 		xhr.setRequestHeader('content-type', 'application/json');
 		xhr.send(data);
 	});
@@ -686,7 +683,7 @@ function odooSetAtencion() {
 			}
 		});
 
-		xhr.open('POST', 'https://test.odoo.visitar.com.ar/autogestion/up/atenciones/v1/atencion/create');
+		xhr.open('POST', 'https://odoo.visitar.com.ar/autogestion/up/atenciones/v1/atencion/create');
 		xhr.setRequestHeader('content-type', 'application/json');
 		xhr.send(data);
 	});
@@ -716,7 +713,7 @@ function odooGetAtenciones(v_session_id) {
 			}
 		});
 
-		xhr.open('POST', 'https://test.odoo.visitar.com.ar/autogestion/up/atenciones/v1/atenciones/consultar');
+		xhr.open('POST', 'https://odoo.visitar.com.ar/autogestion/up/atenciones/v1/atenciones/consultar');
 		xhr.setRequestHeader('content-type', 'application/json');
 		xhr.send(data);
 	});
@@ -747,7 +744,7 @@ function odooGetAtencion(v_session_id, v_numero_gestion, token=false) {
 			}
 		});
 
-		xhr.open('POST', 'https://test.odoo.visitar.com.ar/autogestion/up/atenciones/v1/atencion/consultar');
+		xhr.open('POST', 'https://odoo.visitar.com.ar/autogestion/up/atenciones/v1/atencion/consultar');
 		xhr.setRequestHeader('content-type', 'application/json');
 		xhr.send(data);
 	});
@@ -789,7 +786,7 @@ function odooUnlinkFile(v_session_id, attachment_id, parent) {
 			}
 		});
 
-		const API_ENDPOINT = "https://test.odoo.visitar.com.ar/autogestion/up/atenciones/v1/adjuntos/unlink";
+		const API_ENDPOINT = "https://odoo.visitar.com.ar/autogestion/up/atenciones/v1/adjuntos/unlink";
 		const request = new XMLHttpRequest();
 
 		request.open("POST", API_ENDPOINT, true);
@@ -814,7 +811,7 @@ function odooUploadFile(v_session_id, v_dni, attachment, objBarrita) {
 		const file = attachment[0];
 
 		console.log("Uploading file...");
-		const API_ENDPOINT = "https://test.odoo.visitar.com.ar/autogestion/up/atenciones/v1/adjuntos/upload";
+		const API_ENDPOINT = "https://odoo.visitar.com.ar/autogestion/up/atenciones/v1/adjuntos/upload";
 		const request = new XMLHttpRequest();
 		const formData = new FormData();
 
@@ -894,4 +891,27 @@ function crearTabla(datos) {
     tabla.setAttribute("border", "1");
 
 	return tabla
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll("table tbody tr").forEach(row => {
+        row.addEventListener("click", () => {
+            let documento = row.querySelector("td:nth-child(4)").textContent; // Get the value from the 4th column
+			console.log(documento);
+            let nuevaUrl = window.location.href + "?dni=" + encodeURIComponent(documento);
+            window.location.href = nuevaUrl; // Redirect to the new URL
+        });
+    });
+});
+
+
+function filtrarOpciones() {
+    let input = document.getElementById("busqueda").value.toLowerCase();
+    let select = document.getElementById("numero_gestion");
+    let opciones = select.getElementsByTagName("option");
+
+    for (let i = 0; i < opciones.length; i++) {
+        let texto = opciones[i].text.toLowerCase();
+        opciones[i].style.display = texto.includes(input) ? "" : "none";
+    }
 }

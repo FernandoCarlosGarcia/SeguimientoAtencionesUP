@@ -1,6 +1,6 @@
 <?php
 function getAtenciones(){
-	$url = 'https://test.odoo.visitar.com.ar';
+	$url = 'https://odoo.visitar.com.ar';
 	$atenciones = $_POST['atenciones'];
 	$numero_gestion = $_POST['numero_gestion'];
 

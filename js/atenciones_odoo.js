@@ -9,7 +9,7 @@ jQuery(document).ready(function($){
 	if ( session_id == ''){
 		$.ajax({
 			type: 'POST',
-			url: 'https://test.odoo.visitar.com.ar/autogestion/auth/v1/login',
+			url: 'https://odoo.visitar.com.ar/autogestion/auth/v1/login',
 			data: {'numero_gestion': numero_gestion, 'ben_nrodoc':ben_nrodoc}
   		})
   		.done(function(res){
@@ -20,7 +20,7 @@ jQuery(document).ready(function($){
 	
 	$.ajax({
 		type: 'POST',
-		url: 'https://test.odoo.visitar.com.ar/autogestion/atenciones/v1/consultar/atencion/json',
+		url: 'https://odoo.visitar.com.ar/autogestion/atenciones/v1/consultar/atencion/json',
 		data: {'numero_gestion': numero_gestion, 'ben_nrodoc': ben_nrodoc, 'session_id': session_id}
   	})
   	.done(function(res){
