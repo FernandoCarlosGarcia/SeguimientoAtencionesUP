@@ -6,17 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atenciones UP - Visitar</title>
 
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/chat.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="js\scripts.js"></script>
-
     <?php
     /* Template Name: Consulta Atenciones */
 
     $dni = $_REQUEST["dni"] ?? "";
     $email = $_REQUEST["email"] ?? "";
     $msj = "";
+
+
     /*
         
         $res = isset($_REQUEST["res"]) ? $_REQUEST["res"] : "";
@@ -29,6 +26,13 @@
     */
 
     ?>
+
+
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js\scripts.js"></script>
+
 
     <script type="text/javascript">
 
@@ -85,27 +89,27 @@
                                         <div class="clearfix"></div>
                                         <div id="div_grupo_familiar" class="col-0 grupo_familiar"></div>
                                         <div class="clearfix"></div>
-                                        <div class="col-0" style="display: none" id="div_nombre_afiliado">
-                                            <label for="nombre_afiliado">Apellido y nombre</label>
-                                            <input type="text" name="nombre_afiliado" id="nombre_afiliado" value=""
-                                                readonly />
-                                        </div>
-                                        <div class="clearfix"></div>
-                                        <div class="col-0">
-                                            <label for="dni">DNI *</label>
-                                            <input type="number" name="dni" id="dni" onchange="changeDni()"
-                                                value="<?php echo $dni; ?>" required />
-                                        </div>
-                                        <div class="clearfix"></div>
-                                        <div class="col-0">
-                                            <label for="numero_gestion">Número de Gestión *</label>
 
-                                            <input type="text" id="busqueda" placeholder="Buscar Gestión.."
-                                                onkeyup="filtrarOpciones()">
-                                            <select id="numero_gestion" onchange="changeNG()">
-                                                <option value="">Seleccione una atención</option>
-                                            </select>
+                                        <div class="form-row-cols">
+                                            <div class="col-1" style="display: none" id="div_nombre_afiliado">
+                                                <label for="nombre">Apellido y nombre</label>
+                                                <input type="text" name="nombre_afiliado" id="nombre_afiliado" value=""
+                                                    readonly />
+                                            </div>
+                                            <div class="col-center">
+                                                <label for="dni">DNI *</label>
+                                                <input type="text" name="dni" id="dni" value="<?php echo $dni; ?>"
+                                                    onchange="changeDni()" required />
+                                            </div>
+                                            <div class="col-1">
+                                                <label for="numero_gestion">Número de Gestión *</label>
+                                                <select name="numero_gestion" id="numero_gestion" onchange="changeNG()">
+                                                    <option value="">Seleccione</option>
+                                                </select>
+                                            </div>
                                         </div>
+                                        <input type="text" id="busqueda" placeholder="Buscar..." onkeyup="filtrarOpciones()">
+
                                         <input type="hidden" name="token" id="token" value="<?php echo $token; ?>" />
                                         <input type="hidden" name="session_id" id="session_id" value="" />
                                     </form>
@@ -118,11 +122,18 @@
                                         <div id="agregar_atencion">
                                             <form id="frm_afiliado" name="frm_afiliado" method="post"
                                                 enctype="multipart/form-data" action="" onsubmit="return false">
-                                                <div>
+
+                                                <div class="form-field-wrapper">
                                                     <label for="comentario">Comentario</label>
                                                     <textarea name="comentario" id="comentario"></textarea>
                                                 </div>
 
+                                                <!--
+                                                <div>
+                                                    <label for="comentario">Comentario</label>
+                                                    <textarea name="comentario" id="comentario"></textarea>
+                                                </div>
+    -->
                                                 <label>ADJUNTAR ARCHIVOS</label>
                                                 <p>Archivos Permitidos: <strong>.jpg</strong> / <strong>.jpeg</strong> /
                                                     <strong>.gif</strong> /

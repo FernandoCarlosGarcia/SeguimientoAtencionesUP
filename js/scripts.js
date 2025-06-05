@@ -122,15 +122,15 @@
 				var v_res = await odooUploadFile(v_session_id, v_dni, files, objBarrita);
 				objBarrita.css("width", 100 + "%");
 				objBarrita.addClass("progressComplete");
-				var listado =$("#lista_adjuntos").val();
-				if (listado == ""){
+				var listado = $("#lista_adjuntos").val();
+				if (listado == "") {
 					listado = [v_res['attachment']]
-				}else{
+				} else {
 					listado = JSON.parse(listado);
 					listado.push(v_res['attachment']);
 				}
 				$("#lista_adjuntos").val(JSON.stringify(listado));
-				objBarrita.parent().children("a").attr("p",  v_res['attachment']);
+				objBarrita.parent().children("a").attr("p", v_res['attachment']);
 
 			} catch (error) {
 				console.log('btnAdjuntarOdoo fail ' + error);
@@ -338,225 +338,253 @@
 })(jQuery, this);
 
 
-        let users = {} ;
-        let currentUser = null;
+let users = {};
+let currentUser = null;
 
-        // Funciones para recordar sesión
-        function saveSession(username, rememberMe) {
-            if (rememberMe) {
-                // Guardar en localStorage para que persista entre sesiones del navegador
-                localStorage.setItem('rememberedUser', username);
-                localStorage.setItem('loginTime', Date.now().toString());
-                localStorage.setItem('sessionDuration', '30'); // días
-            } else {
-                // Guardar solo en sessionStorage (se elimina al cerrar el navegador)
-                sessionStorage.setItem('currentUser', username);
-                sessionStorage.setItem('loginTime', Date.now().toString());
-            }
-        }
+// Funciones para recordar sesión
+function saveSession(username, rememberMe) {
+	if (rememberMe) {
+		// Guardar en localStorage para que persista entre sesiones del navegador
+		localStorage.setItem('rememberedUser', username);
+		localStorage.setItem('loginTime', Date.now().toString());
+		localStorage.setItem('sessionDuration', '30'); // días
+	} else {
+		// Guardar solo en sessionStorage (se elimina al cerrar el navegador)
+		sessionStorage.setItem('currentUser', username);
+		sessionStorage.setItem('loginTime', Date.now().toString());
+	}
+}
 
-        function redirectAfterLogin(username) {
-            // Configurar redirecciones por usuario
-            const redirectUrls = {
-                'admin': '/SeguimientoAtencionesUP/index.php',
-                'usuario1': '/user/profile.php',
-                'gerente': '/manager/reports.php',
-                'default': '/dashboard.php'
-            } ;
+function redirectAfterLogin(username) {
+	// Configurar redirecciones por usuario
+	const redirectUrls = {
+		'admin': '/SeguimientoAtencionesUP/index.php',
+		'usuario1': '/user/profile.php',
+		'gerente': '/manager/reports.php',
+		'default': '/dashboard.php'
+	};
 
-            // Obtener URL de redirección o usar default
-            const redirectUrl = redirectUrls[username] || redirectUrls['default'];
+	// Obtener URL de redirección o usar default
+	const redirectUrl = redirectUrls[username] || redirectUrls['default'];
 
-            // Opcional: Mostrar mensaje antes de redirigir
-            showMessage(`Redirigiendo a ${redirectUrl} ...`, 'success');
+	// Opcional: Mostrar mensaje antes de redirigir
+	showMessage(`Redirigiendo a ${redirectUrl} ...`, 'success');
 
-            // Redirigir después de un breve delay para mostrar el mensaje
-            setTimeout(() => {
-                window.location.href = redirectUrl;
-            } , 1500);
-        }
+	// Redirigir después de un breve delay para mostrar el mensaje
+	setTimeout(() => {
+		window.location.href = redirectUrl;
+	}, 1500);
+}
 
-        function redirectToExternalSite(username) {
-            // Para redirigir a sitios externos completos
-            const externalUrls = {
-                'admin': 'https://admin.miempresa.com',
-                'cliente': 'https://portal.miempresa.com',
-                'vendedor': 'https://crm.miempresa.com',
-                'default': 'https://www.miempresa.com/dashboard'
-            } ;
+function redirectToExternalSite(username) {
+	// Para redirigir a sitios externos completos
+	const externalUrls = {
+		'admin': 'https://admin.miempresa.com',
+		'cliente': 'https://portal.miempresa.com',
+		'vendedor': 'https://crm.miempresa.com',
+		'default': 'https://www.miempresa.com/dashboard'
+	};
 
-            const redirectUrl = externalUrls[username] || externalUrls['default'];
+	const redirectUrl = externalUrls[username] || externalUrls['default'];
 
-            showMessage(`Redirigiendo a ${redirectUrl} ...`, 'success');
+	showMessage(`Redirigiendo a ${redirectUrl} ...`, 'success');
 
-            setTimeout(() => {
-                window.location.replace(redirectUrl); // replace no permite volver atrás
-            } , 1500);
-        }
+	setTimeout(() => {
+		window.location.replace(redirectUrl); // replace no permite volver atrás
+	}, 1500);
+}
 
-        function checkSavedSession() {
-            // Verificar si hay una sesión recordada
-            const rememberedUser = localStorage.getItem('rememberedUser');
-            const loginTime = localStorage.getItem('loginTime');
-            const sessionDuration = parseInt(localStorage.getItem('sessionDuration') || '30');
+function checkSavedSession() {
+	// Verificar si hay una sesión recordada
+	const rememberedUser = localStorage.getItem('rememberedUser');
+	const loginTime = localStorage.getItem('loginTime');
+	const sessionDuration = parseInt(localStorage.getItem('sessionDuration') || '30');
 
-            if (rememberedUser && loginTime) {
-                const currentTime = Date.now();
-                const timeDiff = currentTime - parseInt(loginTime);
-                const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+	if (rememberedUser && loginTime) {
+		const currentTime = Date.now();
+		const timeDiff = currentTime - parseInt(loginTime);
+		const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
 
-                if (daysDiff < sessionDuration) {
-                    return rememberedUser;
-                } else {
-                    // Sesión expirada, limpiar datos
-                    clearSavedSession();
-                }
-            }
+		if (daysDiff < sessionDuration) {
+			return rememberedUser;
+		} else {
+			// Sesión expirada, limpiar datos
+			clearSavedSession();
+		}
+	}
 
-            // Verificar sesión temporal
-            const currentUser = sessionStorage.getItem('currentUser');
-            if (currentUser) {
-                return currentUser;
-            }
+	// Verificar sesión temporal
+	const currentUser = sessionStorage.getItem('currentUser');
+	if (currentUser) {
+		return currentUser;
+	}
 
-            return null;
-        }
+	return null;
+}
 
-        function clearSavedSession() {
-            localStorage.removeItem('rememberedUser');
-            localStorage.removeItem('loginTime');
-            localStorage.removeItem('sessionDuration');
-            sessionStorage.removeItem('currentUser');
-            sessionStorage.removeItem('loginTime');
-        }
+function clearSavedSession() {
+	localStorage.removeItem('rememberedUser');
+	localStorage.removeItem('loginTime');
+	localStorage.removeItem('sessionDuration');
+	sessionStorage.removeItem('currentUser');
+	sessionStorage.removeItem('loginTime');
+}
 
-        function autoLogin() {
-            const savedUser = checkSavedSession();
-            if (savedUser) {
-                currentUser = savedUser;
-                saveSession(savedUser, true); // Renovar sesión
+function autoLogin() {
+	const savedUser = checkSavedSession();
+	if (savedUser) {
+		currentUser = savedUser;
+		saveSession(savedUser, true); // Renovar sesión
 
-                // Opción 1: Mostrar dashboard brevemente y luego redirigir
-                showDashboard();
-                showMessage(`Bienvenido de nuevo, ${savedUser} ! Redirigiendo...`, 'success');
-                //setTimeout(() => {
-                //    redirectAfterLogin(savedUser);
-                //} , 2000);
+		// Opción 1: Mostrar dashboard brevemente y luego redirigir
+		showDashboard();
+		showMessage(`Bienvenido de nuevo, ${savedUser} ! Redirigiendo...`, 'success');
+		//setTimeout(() => {
+		//    redirectAfterLogin(savedUser);
+		//} , 2000);
 
-                // Opción 2: Redirigir inmediatamente (descomenta para usar)
-                // redirectAfterLogin(savedUser);
+		// Opción 2: Redirigir inmediatamente (descomenta para usar)
+		// redirectAfterLogin(savedUser);
 
-                return true;
-            }
-            return false;
-        }
+		return true;
+	}
+	return false;
+}
 
-        function initializeSession() {
-            // Verificar si hay una sesión guardada al cargar la página
-            if (!autoLogin()) {
-                console.log('No hay sesión guardada');
-            }
-        }
- 
-        function login() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
+function initializeSession() {
+	// Verificar si hay una sesión guardada al cargar la página
+	if (!autoLogin()) {
+		console.log('No hay sesión guardada');
+	}
+}
 
-            if (!username || !password) {
-                showMessage('Por favor, completa todos los campos.', 'error');
-                return;
-            }
-            /*
-            if (Object.keys(users).length === 0) {
-                showMessage('Por favor, carga primero un archivo de usuarios.', 'error');
-                return;
-            }
-            */
-            let users = {
-                "admin": "admin",
-            } ;
-            if (users[username] && users[username] === password) {
-                currentUser = username;
-                saveSession(username, rememberMe);
+function login() {
+	const username = document.getElementById('username').value.trim();
+	const password = document.getElementById('password').value;
+	const rememberMe = document.getElementById('rememberMe').checked;
 
-                // Opción 1: Mostrar dashboard y luego redirigir
-                showDashboard();
+	if (!username || !password) {
+		showMessage('Por favor, completa todos los campos.', 'error');
+		return;
+	}
+	/*
+	if (Object.keys(users).length === 0) {
+		showMessage('Por favor, carga primero un archivo de usuarios.', 'error');
+		return;
+	}
+	*/
 
-                // showMessage(`¡Bienvenido ${username} ! Redirigiendo...`, 'success');
-                // setTimeout(() => {
-                //    redirectAfterLogin(username);
-                // } , 2000);
+	fetch("https://test.odoo.visitar.com.ar/autogestion/up/auth/v1/portal", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({ params: { user: username, password: password } })
+	})
+		.then(response => response.json())
+		.then(data => {
+			console.log("Respuesta del servidor:", data);
+			if (data.result.status == 200) {
+				saveSession(username, rememberMe);
+				// Opción 1: Mostrar dashboard 
+				showDashboard();
+			} else {
+				showMessage('Usuario o contraseña incorrectos.', 'error');
+			}
+		})
+		.catch(error => {
+			console.error("Error:", error);
+			showMessage('Error de conexión.', 'error');
+		});
 
-                // Opción 2: Redirigir inmediatamente (descomenta para usar)
-                // redirectAfterLogin(username);
+	/*
+	if(response.result.code == 200) {
+		console.log(response.result);
+		saveSession(username, rememberMe);
+		// Opción 1: Mostrar dashboard 
+		showDashboard();
 
-                // Opción 3: Redirigir a sitio externo (descomenta para usar)
-                // redirectToExternalSite(username);
-            } else {
-                showMessage('Usuario o contraseña incorrectos.', 'error');
-            }
-        }
+	}else{
 
-        function showDashboard() {
-            document.getElementById('loginForm').classList.add('hidden');
-            document.getElementById('dashboard').classList.add('show');
-            document.getElementById('userWelcome').textContent = `Usuario: ${currentUser}`;
-        }
+		showMessage('Usuario o contraseña incorrectos.', 'error');
 
-        function logout() {
-            clearSavedSession();
-            currentUser = null;
-            document.getElementById('loginForm').classList.remove('hidden');
-            document.getElementById('dashboard').classList.remove('show');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('rememberMe').checked = false;
-            showMessage('Sesión cerrada correctamente.', 'success');
-        }
+	}
+	
+	let users = {
+		"admin": "admin",
+	} ;
+	if (users[username] && users[username] === password) {
+		currentUser = username;
+		saveSession(username, rememberMe);
 
-        function showMessage(message, type) {
-            const messageDiv = document.getElementById('message');
-            messageDiv.textContent = message;
-            messageDiv.className = type;
-        }
+		// Opción 1: Mostrar dashboard 
+		showDashboard();
 
-        // Permitir login con Enter
-        document.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter' && !document.getElementById('loginForm').classList.contains('hidden')) {
-                login();
-            }
-        } );
+	} else {
+		showMessage('Usuario o contraseña incorrectos.', 'error');
+	}
+		*/
+}
 
-        // Inicializar sesión al cargar la página
-        document.addEventListener('DOMContentLoaded', function () {
-            // Verificar si viene de un parámetro de URL para redirección
-            const urlParams = new URLSearchParams(window.location.search);
-            const redirectUrl = urlParams.get('redirect');
+function showDashboard() {
+	document.getElementById('loginForm').classList.add('hidden');
+	document.getElementById('dashboard').classList.add('show');
+	document.getElementById('userWelcome').textContent = `Usuario: ${currentUser}`;
+}
 
-            if (redirectUrl) {
-                // Guardar URL de redirección para después del login
-                sessionStorage.setItem('redirectAfterLogin', redirectUrl);
-            }
+function logout() {
+	clearSavedSession();
+	currentUser = null;
+	document.getElementById('loginForm').classList.remove('hidden');
+	document.getElementById('dashboard').classList.remove('show');
+	document.getElementById('username').value = '';
+	document.getElementById('password').value = '';
+	document.getElementById('rememberMe').checked = false;
+	showMessage('Sesión cerrada correctamente.', 'success');
+}
 
-            initializeSession();
-        } );
+function showMessage(message, type) {
+	const messageDiv = document.getElementById('message');
+	messageDiv.textContent = message;
+	messageDiv.className = type;
+}
 
-        // Función alternativa para usar URL de redirección guardada
-        function redirectToSavedUrl(username) {
-            const savedRedirectUrl = sessionStorage.getItem('redirectAfterLogin');
+// Permitir login con Enter
+document.addEventListener('keypress', function (e) {
+	if (e.key === 'Enter' && !document.getElementById('loginForm').classList.contains('hidden')) {
+		login();
+	}
+});
 
-            if (savedRedirectUrl) {
-                sessionStorage.removeItem('redirectAfterLogin');
-                showMessage(`Redirigiendo a ${savedRedirectUrl} ...`, 'success');
-                setTimeout(() => {
-                    window.location.href = savedRedirectUrl;
-                } , 1500);
-            } else {
-                // Si no hay URL guardada, usar redirección por defecto
-                redirectAfterLogin(username);
-            }
-        }
+// Inicializar sesión al cargar la página
+document.addEventListener('DOMContentLoaded', function () {
+	// Verificar si viene de un parámetro de URL para redirección
+	const urlParams = new URLSearchParams(window.location.search);
+	const redirectUrl = urlParams.get('redirect');
+
+	if (redirectUrl) {
+		// Guardar URL de redirección para después del login
+		sessionStorage.setItem('redirectAfterLogin', redirectUrl);
+	}
+
+	initializeSession();
+});
+
+// Función alternativa para usar URL de redirección guardada
+function redirectToSavedUrl(username) {
+	const savedRedirectUrl = sessionStorage.getItem('redirectAfterLogin');
+
+	if (savedRedirectUrl) {
+		sessionStorage.removeItem('redirectAfterLogin');
+		showMessage(`Redirigiendo a ${savedRedirectUrl} ...`, 'success');
+		setTimeout(() => {
+			window.location.href = savedRedirectUrl;
+		}, 1500);
+	} else {
+		// Si no hay URL guardada, usar redirección por defecto
+		redirectAfterLogin(username);
+	}
+}
 
 
 function validar() {
@@ -639,13 +667,13 @@ async function changeDni() {
 	} catch (error) {
 		console.log('fail');
 	}
-	await consultarAtenciones();	
+	await consultarAtenciones();
 
 }
 
 async function changeNG() {
 	jQuery("#str_mensaje").html("");
-	consultarAtencion();	
+	consultarAtencion();
 }
 
 
@@ -664,10 +692,10 @@ async function consultarAtencionToken() {
 		jQuery("#nombre_afiliado").val(res.ben_nombre);
 		jQuery("#dni").val(res.ben_nrodoc);
 		jQuery("#numero_gestion").val(res.numero_gestion);
-		jQuery("#email").val(res.atenciones[ res.atenciones.length - 1].cabecera.email);
+		jQuery("#email").val(res.atenciones[res.atenciones.length - 1].cabecera.email);
 		jQuery("#atenciones_odoo").show();
 		jQuery("#div_nombre_afiliado").show();
-	}	
+	}
 }
 
 /*************  ✨ Windsurf Command ⭐  *************/
@@ -685,18 +713,18 @@ async function consultarAtencionToken() {
 	var v_session_id = jQuery("#session_id").val();
 
 
-	if (v_session_id =="") {
+	if (v_session_id == "") {
 		var mensaje = "<span style='color:red;font-size: 1.5em;'>Afiliado no encontrado</span>";
 		jQuery("#str_mensaje").html(mensaje);
 		let select = jQuery("#numero_gestion")
 		select.empty(); // Limpiar opciones previas
-		select.append(new Option('Seleccione una atención','Seleccione una atención'));
+		select.append(new Option('Seleccione una atención', 'Seleccione una atención'));
 
 	} else {
 		if (v_session_id == "") {
 			try {
 				var v_session_id = await odooGetAuth(v_dni);
-				
+
 			} catch (error) {
 				console.log('fail');
 			}
@@ -713,16 +741,27 @@ async function consultarAtencionToken() {
 
 			}
 
-			    // Llenar el combo con las atenciones
-			    let select = jQuery("#numero_gestion");
-			    select.empty(); // Limpiar opciones previas
+			// Llenar el combo con las atenciones
+			let select = jQuery("#numero_gestion");
+			select.empty(); // Limpiar opciones previas
 
-				select.append(new Option('Seleccione una atención','Seleccione una atención'));
-			    res.forEach(atencion => {
-					var value = atencion.numero_gestion + ' ' + atencion.create_date;
-			        select.append(new Option(value, atencion.numero_gestion ));
-			    });
-				jQuery("#div_nombre_afiliado").show();
+			select.append(new Option('Seleccione una atención', 'Seleccione una atención'));
+			res.forEach(atencion => {
+
+				const timestamp = Date.parse(atencion.create_date);
+				const formattedDate = new Intl.DateTimeFormat("es-AR", {
+					day: "2-digit",
+					month: "2-digit",
+					year: "numeric",
+					hour: "2-digit",
+					minute: "2-digit",
+					hour12: false
+				}).format(timestamp);
+
+				var value = atencion.numero_gestion + ' ' + formattedDate;
+				select.append(new Option(value, atencion.numero_gestion));
+			});
+			jQuery("#div_nombre_afiliado").show();
 
 		}
 	}
@@ -739,13 +778,13 @@ async function consultarAtencion() {
 
 	var v_dni = jQuery("#dni").val();
 	var v_numero_gestion = jQuery("#numero_gestion").val();
-	
-	if( numero_gestion == "Seleccione una atención"){
+
+	if (numero_gestion == "Seleccione una atención") {
 		var mensaje = "<span style='color:red;font-size: 1.5em;'>" + v_numero_gestion + "</span>";
 		jQuery("#str_mensaje").html(mensaje);
 
 	}
-	else if (v_numero_gestion == "" || v_dni == "" ) {
+	else if (v_numero_gestion == "" || v_dni == "") {
 		var mensaje = "<span style='color:red;font-size: 1.5em;'>" + v_numero_gestion + "</span>";
 		jQuery("#str_mensaje").html(mensaje);
 	} else {
@@ -775,8 +814,8 @@ async function consultarAtencion() {
 }
 
 function validarEmail(email) {
-    var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
+	var regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	return regex.test(email);
 }
 
 
@@ -787,10 +826,10 @@ async function enviarAtencion() {
 	var v_session_id = jQuery("#session_id").val();
 	var v_comentario = jQuery("#comentario").val();
 	var v_email = jQuery("#email").val();
-	
+
 	if (!validarEmail(v_email)) {
 		return;
-    }
+	}
 
 
 	if (v_comentario == "") {
@@ -832,7 +871,7 @@ function odooGetAuth(v_dni) {
 					jQuery("#session_id").val(res.result.session_id);
 					jQuery("#nombre_afiliado").val(res.result.ben_nombre);
 
-					if (res.result.grupo.gpf) {					
+					if (res.result.grupo.gpf) {
 						let tabla = crearTabla(res.result.grupo.gpf)
 						jQuery("#div_grupo_familiar").html(tabla);
 						jQuery("#div_grupo_familiar").show();
@@ -868,7 +907,7 @@ function odooSetAtencion() {
 
 		var attachments = jQuery("#lista_adjuntos").val();
 		var attachment_ids = (attachments == "") ? [] : JSON.parse(attachments);
-	
+
 		const data = JSON.stringify({
 			params: {
 				session_id: v_session_id,
@@ -937,7 +976,7 @@ function odooGetAtenciones(v_session_id) {
 	});
 }
 
-function odooGetAtencion(v_session_id, v_numero_gestion, token=false) {
+function odooGetAtencion(v_session_id, v_numero_gestion, token = false) {
 	return new Promise(function (resolve, reject) {
 		console.log("GetAtencion")
 		const data = JSON.stringify({
@@ -979,14 +1018,14 @@ function odooMostrarAtencion(res, v_numero_gestion, estado) {
 			jQuery('#atenciones').show();
 			console.log(estado);
 			/* permite responder en cerrado, par la version v4 va a tener tambien una nueva propioedad de no permitir mensajes que reemplaza a esta*/
-			
+
 			if (estado === 'Cerrado') {
-				jQuery('#agregar_atencion').hide();				
+				jQuery('#agregar_atencion').hide();
 				jQuery('#str_mensaje').html('<h2>ESTE CASO SE ENCUENTRA CONCLUIDO, SI TIENE NUEVAS CONSULTAS DEBE GENERAR UN NUEVO REQUERIMIENTO</h2>');
-			}else{
-				jQuery('#agregar_atencion').show();				
+			} else {
+				jQuery('#agregar_atencion').show();
 			}
-			
+
 
 		})
 		.fail(function () {
@@ -1071,66 +1110,63 @@ function cerrarLoader() {
 function crearTabla(datos) {
 
 	const mapeoTitulos = {
-    	ben_nombre: "Afiliado",
-    	estado: "Estado de Cobertura",
-    	fechanac: "Fecha de Nacimiento",
-    	ben_nrodoc: "Número de Documento"
+		ben_nombre: "Afiliado",
+		estado: "Estado de Cobertura",
+		fechanac: "Fecha de Nacimiento",
+		ben_nrodoc: "Número de Documento"
 	};
 
 
-    // Crear la tabla y elementos dentro
-    let tabla = document.createElement("table");
+	// Crear la tabla y elementos dentro
+	let tabla = document.createElement("table");
+	tabla.id = "gpf";
 	tabla.classList.add("tabla_gpf"); // Agregar clase a la tabla
 
-    let thead = document.createElement("thead");
-    let tbody = document.createElement("tbody");
+	let thead = document.createElement("thead");
+	let tbody = document.createElement("tbody");
 
-    // Crear encabezado
-    let encabezado = document.createElement("tr");
-    Object.keys(datos[0]).forEach(key => {
-        let th = document.createElement("th");
-        th.textContent =  mapeoTitulos[key];
-        encabezado.appendChild(th);
-    });
-    thead.appendChild(encabezado);
+	// Crear encabezado
+	let encabezado = document.createElement("tr");
+	Object.keys(datos[0]).forEach(key => {
+		let th = document.createElement("th");
+		th.textContent = mapeoTitulos[key];
+		encabezado.appendChild(th);
+	});
+	thead.appendChild(encabezado);
 
-    // Crear filas con datos
-    datos.forEach(item => {
-        let fila = document.createElement("tr");
-        Object.values(item).forEach(valor => {
-            let td = document.createElement("td");
-            td.textContent = valor;
-            fila.appendChild(td);
-        });
-        tbody.appendChild(fila);
-    });
+	// Crear filas con datos
+	datos.forEach(item => {
+		let fila = document.createElement("tr");
+		Object.values(item).forEach(valor => {
+			let td = document.createElement("td");
+			td.textContent = valor;
+			td.classList.add("clickable");
+                    td.addEventListener("click", () => {
+						if (td.cellIndex == 3) {
+							jQuery("#dni").val(td.textContent);
+							changeDni();
+						}
+                    });
+			fila.appendChild(td);
+		});
+		tbody.appendChild(fila);
+	});
 
-    // Agregar elementos a la tabla
-    tabla.appendChild(thead);
-    tabla.appendChild(tbody);
-    tabla.setAttribute("border", "1");
+	// Agregar elementos a la tabla
+	tabla.appendChild(thead);
+	tabla.appendChild(tbody);
+	tabla.setAttribute("border", "1");
 
 	return tabla
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll("table tbody tr").forEach(row => {
-        row.addEventListener("click", () => {
-            let documento = row.querySelector("td:nth-child(4)").textContent; // Get the value from the 4th column
-            let nuevaUrl = window.location.href + "?dni=" + encodeURIComponent(documento);
-            window.location.href = nuevaUrl; // Redirect to the new URL
-        });
-    });
-});
-
-
 function filtrarOpciones() {
-    let input = document.getElementById("busqueda").value.toLowerCase();
-    let select = document.getElementById("numero_gestion");
-    let opciones = select.getElementsByTagName("option");
+	let input = document.getElementById("busqueda").value.toLowerCase();
+	let select = document.getElementById("numero_gestion");
+	let opciones = select.getElementsByTagName("option");
 
-    for (let i = 0; i < opciones.length; i++) {
-        let texto = opciones[i].text.toLowerCase();
-        opciones[i].style.display = texto.includes(input) ? "" : "none";
-    }
+	for (let i = 0; i < opciones.length; i++) {
+		let texto = opciones[i].text.toLowerCase();
+		opciones[i].style.display = texto.includes(input) ? "" : "none";
+	}
 }

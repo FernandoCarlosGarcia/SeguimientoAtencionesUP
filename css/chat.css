@@ -1,80 +1,88 @@
+/* Import a modern font and Font Awesome for icons */
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700);
-@import url('https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css'); /* Updated Font Awesome for more icons */
 
+/* Basic reset */
 *, *:before, *:after {
   box-sizing: border-box;
 }
+
+/* General chat container styling */
+.chat {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure chat takes full height of its parent */
+    background-color: #f9f9f9; /* Light background for chat area */
+    border-radius: 10px;
+    overflow: hidden; /* Hide overflow for chat history */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* Soft shadow for the chat box */
+}
+
+/* Chat history area */
 .chat .chat-history {
-  padding: 30px 30px 20px;
-  border-bottom: 2px solid white;
+  padding: 20px 25px; /* Adjusted padding */
+  border-bottom: 1px solid #e0e0e0; /* Lighter, subtle border */
+  flex-grow: 1; /* Allow chat history to grow and fill space */
+  overflow-y: auto; /* Enable scrolling for chat history */
+  scroll-behavior: smooth; /* Smooth scrolling */
 }
+
+/* Message data (sender name and time) */
 .chat .chat-history .message-data {
-  margin-bottom: 15px;
+  margin-bottom: 10px; /* Reduced margin */
+  display: flex;
+  align-items: center;
 }
+
 .chat .chat-history .message-data-time {
-  color: #b2cc8f;
-  padding-left: 6px;
+  color: #a0a0a0; /* Muted gray for time */
+  padding-left: 8px; /* More padding */
+  font-size: 0.85rem; /* Slightly smaller font */
 }
+
+.chat .chat-history .message-data-name {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Message bubble styling */
 .chat .chat-history .message {
-  color: white;
-  padding: 18px 20px;
-  line-height: 26px;
-  font-size: 16px;
-  border-radius: 5px;
-  margin-bottom: 30px;
-  width: 90%;
+  color: #333; /* Darker text inside messages */
+  padding: 15px 18px; /* Slightly less padding */
+  line-height: 1.5; /* Improved line height */
+  font-size: 1rem;
+  border-radius: 12px; /* More rounded corners for bubbles */
+  margin-bottom: 20px; /* Space between messages */
+  max-width: 85%; /* Max width for message bubbles */
   position: relative;
+  word-wrap: break-word; /* Ensure long words break */
 }
+
+/* Arrow for message bubbles (removed for a cleaner, modern look) */
 .chat .chat-history .message:after {
-content: "";
-    position: absolute;
-    top: -15px;
-    left: 20px;
-    border-width: 0 15px 15px;
-    border-style: solid;
-    border-color: #b2cc8f transparent;
-    display: block;
-    width: 0;
+    content: none; /* Remove the arrow */
 }
+
+/* Your messages (sent by the user) */
 .chat .chat-history .you-message {
-  background: #b2cc8f;
-  color:#003366;
+  background: #e6f2ff; /* Light blue background for your messages */
+  color: #333;
+  float: left; /* Align to left */
+  margin-right: auto; /* Push to left */
 }
+
+/* My messages (sent by Visitar/Odoo) */
 .chat .chat-history .me-message {
-  background: #509cff;
-}
-.chat .chat-history .me-message:after {
-  border-color: #509cff transparent;
-    right: 20px;
-    top: -15px;
-    left: auto;
-    bottom:auto;
-}
-.chat .chat-message {
-  padding: 30px;
-}
-.chat .chat-message .fa-file-o, .chat .chat-message .fa-file-image-o .fa-link{
-  font-size: 16px;
-  color: #b2cc8f;
-  cursor: pointer;
+  background: #d4edda; /* Light green background for other party's messages */
+  color: #333;
+  float: right; /* Align to right */
+  margin-left: auto; /* Push to right */
 }
 
-.chat-ul li{
-    list-style-type: none;
-}
-
-.align-left {
-  text-align: left;
-}
-
-.align-right {
-  text-align: right;
-}
-
-.float-right {
-  float: right;
-}
-
+/* Clearfix for message alignment */
 .clearfix:after {
   visibility: hidden;
   display: block;
@@ -83,15 +91,82 @@ content: "";
   clear: both;
   height: 0;
 }
-.you {
-  color: #b2cc8f;
+
+/* Avatar styling */
+.chat .chat-history .avatar {
+    border-radius: 50%; /* Circular avatars */
+    width: 35px; /* Consistent size */
+    height: 35px;
+    margin-right: 8px; /* Space between avatar and name */
+    object-fit: cover; /* Ensure image covers the area */
+    border: 2px solid rgba(0, 0, 0, 0.05); /* Subtle border */
 }
 
-.me {
-  color: #509cff;
+/* Attachment styling within messages */
+.chat .chat-history .message .align-right {
+    text-align: right; /* Align attachments to the right within the message */
+    margin-top: 10px; /* Space above attachments */
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: "Raleway",sans-serif;
-    color: #003366;
+.chat .chat-history .message a {
+    color: #007bff; /* Blue for links */
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex; /* Allow icon and text to be on one line */
+    align-items: center;
+    margin-top: 5px;
+    transition: color 0.2s ease;
+}
+
+.chat .chat-history .message a:hover {
+    color: #0056b3; /* Darker blue on hover */
+    text-decoration: underline;
+}
+
+.chat .chat-history .message a i {
+    margin-right: 5px; /* Space between icon and text */
+    font-size: 1rem;
+}
+
+/* Responsive adjustments for chat */
+@media (max-width: 768px) {
+    .chat .chat-history {
+        padding: 15px 20px;
+    }
+
+    .chat .chat-history .message {
+        font-size: 0.95rem;
+        padding: 12px 15px;
+        max-width: 90%;
+    }
+
+    .chat .chat-history .message-data-time {
+        font-size: 0.8rem;
+    }
+
+    .chat .chat-history .avatar {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .chat .chat-history {
+        padding: 10px 15px;
+    }
+
+    .chat .chat-history .message {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+        max-width: 95%;
+    }
+
+    .chat .chat-history .message-data-time {
+        font-size: 0.75rem;
+    }
+
+    .chat .chat-history .avatar {
+        width: 25px;
+        height: 25px;
+    }
 }
